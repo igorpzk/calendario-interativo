@@ -1,0 +1,394 @@
+/* Estilos Gerais */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f6f9;
+    margin: 0;
+    padding: 0;
+}
+
+/* Calendário */
+.calendar {
+    max-width: 1000px;
+    margin: 20px auto;
+    background-color: #ffffff;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: #007bff;
+    color: #ffffff;
+}
+.calendar-header h2 {
+    margin: 0;
+    font-size: 24px;
+}
+.calendar-header button {
+    background: none;
+    border: none;
+    color: #ffffff;
+    font-size: 18px;
+    cursor: pointer;
+}
+.calendar-header button:focus {
+    outline: none;
+}
+.calendar-body {
+    padding: 20px;
+}
+.calendar-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+    color: #888;
+    font-weight: bold;
+}
+.calendar-weekdays div {
+    padding: 10px 0;
+}
+.calendar-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1.2fr);
+    text-align: left;
+}
+.calendar-days div {
+    padding: 5px;
+    margin: 5px;
+    background-color: #e9ecef;
+    border-radius: 5px;
+    cursor: pointer;
+    position: relative;
+    min-height: 30px;
+    overflow: hidden;
+}
+
+.calendar-days div.today {
+    background-color: #007bff;
+    color: #ffffff;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+.calendar-days div.today .day-number {
+    color: inherit;
+    background-color: #007bff
+}
+
+.calendar-days div:hover {
+    background-color: #007bff;
+    color: #ffffff;
+}
+
+.calendar-days div.other-month {
+    background-color: #f0f0f0; /* Cor de fundo mais clara */
+    color: #999999; /* Texto mais claro */
+}
+
+.calendar-days div.other-month .day-number {
+    color: inherit;
+}
+
+.calendar-days div.other-month:hover {
+    background-color: #e0e0e0;
+    color: #666666;
+}
+
+.calendar-days div.other-month .task-preview {
+    background-color: #e0e0e0;
+}
+
+.calendar-days div.other-month .task-preview.completed {
+    background-color: #d0d0d0;
+}
+
+.day-number {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+.task-preview {
+    font-size: 14px;
+    margin-bottom: 1px;
+    padding: 2px;
+    border-radius: 3px;
+    color: #ffffff;
+    cursor: move;
+    word-wrap: break-word;
+    max-height: 50px; /* Definir uma altura máxima */
+    overflow-y: auto; /* Adicionar barra de rolagem vertical se exceder a altura */
+}
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 10;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.5);
+}
+.modal-content {
+    background-color: #ffffff;
+    margin: 5% auto;
+    padding: 20px;
+    border-radius: 10px;
+    width: 400px;
+    position: relative;
+}
+.modal-content h3 {
+    margin-top: 0;
+}
+.close-btn {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+.close-btn:hover,
+.close-btn:focus {
+    color: #000000;
+    text-decoration: none;
+    cursor: pointer;
+}
+.modal form {
+    display: flex;
+    flex-direction: column;
+}
+.modal form label {
+    margin-top: 10px;
+}
+.modal form input,
+.modal form textarea,
+.modal form select {
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+}
+.modal form button {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #007bff;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.modal form button:hover {
+    background-color: #0056b3;
+}
+/* Lista de Tarefas */
+.task-list {
+    margin-top: 10px;
+    text-align: left;
+}
+.task-item {
+    background-color: #f8f9fa;
+    padding: 10px;
+    border-left: 5px solid;
+    margin-bottom: 10px;
+    border-radius: 3px;
+    position: relative;
+}
+.task-item h4 {
+    margin: 0 0 5px 0;
+}
+.task-item p {
+    margin: 0;
+    font-size: 14px;
+}
+.tag {
+    display: inline-block;
+    padding: 2px 8px;
+    margin-top: 5px;
+    background-color: #6c757d;
+    color: #ffffff;
+    border-radius: 3px;
+    font-size: 12px;
+}
+.delete-task {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    color: #dc3545;
+    font-size: 16px;
+    cursor: pointer;
+}
+.delete-task:hover {
+    color: #a71d2a;
+}
+/* Lista de Tags */
+.tag-list {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 10px;
+    background-color: #ffffff;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    border-radius: 10px;
+}
+.tag-list h3 {
+    margin-top: 0;
+}
+.tag-item {
+    display: inline-block;
+    padding: 5px 10px;
+    margin: 5px;
+    background-color: #6c757d;
+    color: #ffffff;
+    border-radius: 5px;
+    font-size: 14px;
+}
+/* Estilos para a lista de seleção de tags */
+.tag-suggestions {
+    position: absolute;
+    background-color: #ffffff;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+    max-height: 150px;
+    overflow-y: auto;
+    width: calc(100% - 22px);
+    z-index: 20;
+}
+.tag-suggestion-item {
+    padding: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+.tag-suggestion-item:hover {
+    background-color: #f1f1f1;
+}
+.tag-color-circle {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    margin-left: auto;
+}
+/* Botão de Importar */
+.import-container {
+    max-width: 800px;
+    margin: 20px auto;
+    text-align: center;
+}
+.import-container input[type="file"] {
+    display: none;
+}
+.import-container label {
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: #ffffff;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.import-container label:hover {
+    background-color: #218838;
+}
+
+/* Botão de Exportar */
+
+.export-container {
+    max-width: 800px;
+    margin: 20px auto;
+    text-align: center;
+}
+
+.export-container button {
+    padding: 10px 20px;
+    background-color: #17a2b8;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.export-container button:hover {
+    background-color: #117a8b;
+}
+
+/* Estilo para tarefas concluídas no calendário */
+.task-preview.completed {
+    background-color: #d3d3d3; /* Cor de fundo cinza claro */
+    color: #666666; /* Texto cinza escuro */
+    text-decoration: line-through; /* Texto riscado */
+    position: relative;
+    border-left: 5px solid;
+    border-left-color: inherit;
+    padding-left: 5px;
+}
+
+/* Estilo para tarefas concluídas no modal */
+.task-item.completed {
+    background-color: #d3d3d3;
+    color: #666666;
+    border-left: 5px solid;
+    border-left-color: inherit;
+}
+
+.task-item.completed h4 {
+    text-decoration: line-through;
+}
+
+.task-item.completed .tag {
+    opacity: 0.6;
+}
+
+/* Ajustes nos botões e checkbox */
+.complete-task-checkbox {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    cursor: pointer;
+}
+
+.edit-task {
+    position: absolute;
+    top: 10px;
+    right: 40px;
+    background: none;
+    border: none;
+    color: #007bff;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.edit-task:hover {
+    color: #0056b3;
+}
+
+.delete-task {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    color: #dc3545;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.delete-task:hover {
+    color: #a71d2a;
+}
+
+/* Edição de tarefas*/
+.edit-task {
+    position: absolute;
+    top: 10px;
+    right: 40px; /* Ajuste conforme necessário */
+    background: none;
+    border: none;
+    color: #007bff;
+    font-size: 16px;
+    cursor: pointer;
+}
+.edit-task:hover {
+    color: #0056b3;
+}

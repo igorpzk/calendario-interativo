@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Calendário Interativo com Drag and Drop de Tarefas</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="calendar">
+    <div class="calendar-header">
+        <button id="prev-month">&#10094;</button>
+        <h2 id="month-year"></h2>
+        <button id="next-month">&#10095;</button>
+    </div>
+    <div class="calendar-body">
+        <div class="calendar-weekdays">
+            <div>Dom</div>
+            <div>Seg</div>
+            <div>Ter</div>
+            <div>Qua</div>
+            <div>Qui</div>
+            <div>Sex</div>
+            <div>Sáb</div>
+        </div>
+        <div class="calendar-days" id="calendar-days"></div>
+    </div>
+</div>
+
+<!-- Botão de Importar Tarefas -->
+<div class="import-container">
+    <input type="file" id="import-file" accept=".json">
+    <label for="import-file">Importar Tarefas</label>
+</div>
+
+<!-- Botão de Exportar Tarefas -->
+<div class="export-container">
+    <button id="export-button">Exportar Tarefas</button>
+</div>
+
+<!-- Lista de Tags -->
+<div class="tag-list" id="tag-list">
+    <h3>Tags Utilizadas</h3>
+    <div id="tags-container"></div>
+</div>
+
+<!-- Modal para Adicionar Tarefa -->
+<div id="task-modal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn">&times;</span>
+        <h3>Adicionar Tarefa</h3>
+        <form id="task-form">
+            <input type="hidden" id="task-date">
+            <label for="task-time">Horário:</label>
+            <input type="time" id="task-time">
+            <label for="task-desc">Descrição:</label>
+            <textarea id="task-desc" rows="3" required></textarea>
+            <label for="task-tag">Tag:</label>
+            <input type="text" id="task-tag" placeholder="Nome da Tag" autocomplete="off" required>
+            <div id="tag-suggestions" class="tag-suggestions"></div>
+            <label for="tag-color">Cor da Tag:</label>
+            <input type="color" id="tag-color" value="#6c757d">
+            <button type="submit">Salvar Tarefa</button>
+        </form>
+    </div>
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
