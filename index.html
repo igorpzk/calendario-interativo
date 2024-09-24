@@ -2,10 +2,19 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Calendário Interativo com Drag and Drop de Tarefas</title>
+    <title>Calendário Interativo - PZK</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+  <header>
+    <div class="auth-buttons">
+      <!-- Botões de autenticação -->
+      <button onclick="openRegisterModal()">Registrar-se</button>
+      <button onclick="openLoginModal()">Login</button>
+      <button id="logout-button" onclick="logoutUser()" style="display: none;">Logout</button>
+    </div>
+  </header>
 
 <div class="calendar">
     <div class="calendar-header">
@@ -64,6 +73,64 @@
         </form>
     </div>
 </div>
+
+ <!-- Modal de Registro -->
+  <div id="register-modal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeRegisterModal()">&times;</span>
+      <h3>Registrar-se</h3>
+      <form id="register-form">
+        <label for="register-email">Email:</label>
+        <input type="email" id="register-email" required>
+
+        <label for="register-password">Senha:</label>
+        <input type="password" id="register-password" required>
+
+        <button type="submit">Registrar</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal de Login -->
+  <div id="login-modal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeLoginModal()">&times;</span>
+      <h3>Login</h3>
+      <form id="login-form">
+        <label for="login-email">Email:</label>
+        <input type="email" id="login-email" required>
+
+        <label for="login-password">Senha:</label>
+        <input type="password" id="login-password" required>
+
+        <button type="submit">Entrar</button>
+      </form>
+    </div>
+  </div>
+
+
+<!-- Scripts do Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+
+<!-- Inicialização do Firebase -->
+<script>
+  // Sua configuração do Firebase
+  const firebaseConfig = {
+    apiKey: "AIzaSyAxjhi71-bmCIALt3xwhBbauFKW4ZPzPNo",
+    authDomain: "calendario-b8bf2.firebaseapp.com",
+    projectId: "calendario-b8bf2",
+    storageBucket: "calendario-b8bf2.appspot.com",
+    messagingSenderId: "98137517234",
+    appId: "1:98137517234:web:b136a698128a803c76adab",
+    measurementId: "G-545NVJCPXQ"
+  };
+
+  // Inicialize o Firebase
+  firebase.initializeApp(firebaseConfig);
+</script>
 
 <script src="script.js"></script>
 

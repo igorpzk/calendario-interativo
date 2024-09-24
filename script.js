@@ -19,6 +19,10 @@ const tagSuggestions = document.getElementById('tag-suggestions');
 const importFileInput = document.getElementById('import-file');
 const exportButton = document.getElementById('export-button');
 
+const registerForm = document.getElementById('register-form');
+const loginForm = document.getElementById('login-form');
+const logoutButton = document.getElementById('logout-button');
+
 let date = new Date();
 let currentMonth = date.getMonth();
 let currentYear = date.getFullYear();
@@ -38,25 +42,140 @@ function pad(n) {
     return n < 10 ? '0' + n : n;
 }
 
-// Função para carregar dados do localStorage
-function loadData() {
-    const storedTasks = localStorage.getItem('tasks');
-    const storedTags = localStorage.getItem('tags');
-
-    if (storedTasks) {
-        tasks = JSON.parse(storedTasks);
-    }
-
-    if (storedTags) {
-        tags = JSON.parse(storedTags);
-        updateTags();
-    }
+// Funções para abrir e fechar os modais
+function openRegisterModal() {
+    document.getElementById('register-modal').style.display = 'block';
 }
 
-// Função para salvar dados no localStorage
-function saveData() {
-    localStorage.setItem('tasks', JSON.stringify(tasks));
-    localStorage.setItem('tags', JSON.stringify(tags));
+function closeRegisterModal() {
+    document.getElementById('register-modal').style.display = 'none';
+}
+
+function openLoginModal() {
+    document.getElementById('login-modal').style.display = 'block';
+}
+
+function closeLoginModal() {
+    document.getElementById('login-modal').style.display = 'none';
+}
+
+// Registrar novo usuário
+registerForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+    const email = document.getElementById('register-email').value;
+    const password = document.getElementById('register-password').value;
+
+    firebase.auth().createUserWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+            alert('Usuário registrado com sucesso!');
+            closeRegisterModal();
+        })
+        .catch((error) => {
+            alert('Erro ao registrar: ' + error.message);
+        });
+});
+
+// Login do usuário
+// Adicionar o listener de submit
+loginForm.addEventListener('submit', function (e) {
+  e.preventDefault(); // Prevenir o comportamento padrão do formulário
+
+  // Obter os valores dos campos de email e senha
+  const email = document.getElementById('login-email').value;
+  const password = document.getElementById('login-password').value;
+
+  // Usar o Firebase Authentication para fazer login
+  firebase.auth().signInWithEmailAndPassword(email, password)
+    .then((userCredential) => {
+      // Login bem-sucedido
+      alert('Login realizado com sucesso!');
+      closeLoginModal(); // Fechar o modal de login
+    })
+    .catch((error) => {
+      // Tratar erros
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      alert('Erro ao fazer login: ' + errorMessage);
+      console.error('Erro de login:', errorCode, errorMessage);
+    });
+});
+
+// Função para fazer logout
+function logoutUser() {
+saveUserData(); 
+    firebase.auth().signOut()
+        .then(() => {
+            alert('Logout realizado com sucesso!');
+        })
+        .catch((error) => {
+            alert('Erro ao fazer logout: ' + error.message);
+        });
+}
+
+// Observar mudanças na autenticação
+firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+        // Usuário está logado
+        console.log('Usuário logado:', user.email);
+        logoutButton.style.display = 'block';
+        loadUserData();
+    } else {
+        // Usuário não está logado
+        console.log('Usuário não está logado');
+        logoutButton.style.display = 'none';
+        tasks = {};
+        tags = {};
+        renderCalendar(currentMonth, currentYear);
+        updateTags();
+    }
+});
+
+// Carregar dados do usuário do Firestore
+function loadUserData() {
+  const user = firebase.auth().currentUser;
+  if (user) {
+    const db = firebase.firestore();
+    const userDocRef = db.collection('users').doc(user.uid);
+
+    userDocRef.get()
+      .then((doc) => {
+        if (doc.exists) {
+          const data = doc.data();
+          tasks = data.tasks || {};
+          tags = data.tags || {};
+          renderCalendar(currentMonth, currentYear);
+          updateTags();
+        } else {
+          // Documento não existe, iniciar com dados vazios
+          tasks = {};
+          tags = {};
+          renderCalendar(currentMonth, currentYear);
+          updateTags();
+        }
+      })
+      .catch((error) => {
+        console.log('Erro ao carregar dados:', error);
+      });
+  }
+}
+
+// Salvar dados do usuário no Firestore
+function saveUserData() {
+    const user = firebase.auth().currentUser;
+    if (user) {
+        const db = firebase.firestore();
+        const userDocRef = db.collection('users').doc(user.uid);
+
+        userDocRef.set({ tasks: tasks, tags: tags })
+            .then(() => {
+                console.log('Dados salvos com sucesso!');
+            })
+            .catch((error) => {
+                console.log('Erro ao salvar dados:', error);
+            });
+    } else {
+        console.log('Usuário não está autenticado.');
+    }
 }
 
 // Função para renderizar o calendário
@@ -222,7 +341,7 @@ function addDayEventListeners(dayDiv, fullDate) {
             currentYear = newDate.getFullYear();
 
             // Salvar dados e atualizar o calendário
-            saveData();
+            saveUserData();
             renderCalendar(currentMonth, currentYear);
 
             // Resetar variáveis
@@ -323,6 +442,7 @@ taskForm.addEventListener('submit', function(e) {
         // Se a data não mudou, atualizar a tarefa existente
         if (originalDate === dateStr) {
             tasks[dateStr][taskIndex] = task;
+			
         } else {
             // Se a data mudou, mover a tarefa para a nova data
             tasks[originalDate].splice(taskIndex, 1);
@@ -353,7 +473,7 @@ taskForm.addEventListener('submit', function(e) {
         updateTags();
     }
 
-    saveData(); // Salvar dados no localStorage
+    saveUserData(); // Salvar dados no Firestore
 
     taskForm.reset();
     tagSuggestions.innerHTML = '';
@@ -460,7 +580,7 @@ function deleteTask(dateStr, taskIndex) {
         delete tasks[dateStr];
     }
 
-    saveData(); // Salvar dados no localStorage
+    saveUserData(); // Salvar dados no Firestore
 
     renderCalendar(currentMonth, currentYear);
     showTasks(dateStr);
@@ -469,7 +589,7 @@ function deleteTask(dateStr, taskIndex) {
 // Função para alternar o estado de conclusão da tarefa
 function toggleTaskCompletion(dateStr, taskIndex) {
     tasks[dateStr][taskIndex].completed = !tasks[dateStr][taskIndex].completed;
-    saveData();
+    saveUserData();
     renderCalendar(currentMonth, currentYear);
     showTasks(dateStr);
 }
@@ -526,33 +646,34 @@ document.addEventListener('click', function(event) {
 
 // Função para importar tarefas
 importFileInput.addEventListener('change', function(event) {
-    const file = event.target.files[0];
-    if (file) {
-        if (file.type === 'application/json' || file.name.endsWith('.json')) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    const importedData = JSON.parse(e.target.result);
-                    if (importedData.tasks && importedData.tags) {
-                        tasks = importedData.tasks;
-                        tags = importedData.tags;
-                        saveData();
-                        updateTags();
-                        renderCalendar(currentMonth, currentYear);
-                        alert('Tarefas importadas com sucesso!');
-                    } else {
-                        alert('O arquivo não está no formato correto.');
-                    }
-                } catch (error) {
-                    alert('Erro ao ler o arquivo. Certifique-se de que é um arquivo JSON válido.');
-                }
-            };
-            reader.readAsText(file);
-        } else {
-            alert('Por favor, selecione um arquivo JSON.');
+  const file = event.target.files[0];
+  if (file) {
+    if (file.type === 'application/json' || file.name.endsWith('.json')) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const importedData = JSON.parse(e.target.result);
+          if (importedData.tasks && importedData.tags) {
+            tasks = importedData.tasks;
+            tags = importedData.tags;
+            updateTags();
+			saveUserData(); // Salvar dados importados no Firestore
+            renderCalendar(currentMonth, currentYear);
+            alert('Tarefas importadas com sucesso!');
+          } else {
+            alert('O arquivo não está no formato correto.');
+          }
+        } catch (error) {
+          alert('Erro ao ler o arquivo. Certifique-se de que é um arquivo JSON válido.');
         }
+      };
+      reader.readAsText(file);
+    } else {
+      alert('Por favor, selecione um arquivo JSON.');
     }
+  }
 });
+
 
 // Função para exportar tarefas
 exportButton.addEventListener('click', function() {
@@ -577,6 +698,5 @@ exportButton.addEventListener('click', function() {
     URL.revokeObjectURL(url);
 });
 
-// Carregar dados e renderizar o calendário
-loadData();
+// Inicialização
 renderCalendar(currentMonth, currentYear);
