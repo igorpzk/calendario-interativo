@@ -6,6 +6,18 @@ body {
     padding: 0;
 }
 
+header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+header h1 {
+  margin-bottom: 10px;
+  font-size: 36px;
+  color: #333;
+}
+
+
 /* Estilos básicos para os modais */
 .modal {
   display: none;
@@ -42,6 +54,25 @@ body {
   cursor: pointer;
 }
 
+/* Botões dentro dos modais */
+.modal-content button {
+  width: 100%;
+  margin-top: 10px;
+}
+
+/* Botão de fechar modal */
+.modal-content .close-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 30px;
+  color: #aaa;
+}
+
+.modal-content .close-btn:hover {
+  color: #000;
+  cursor: pointer;
+}
 
 
 /* Calendário */
@@ -345,11 +376,81 @@ body {
     border: none;
     border-radius: 5px;
     cursor: pointer;
+	align-items: center;
 }
 
 .export-container button:hover {
     background-color: #117a8b;
 }
+
+/* Botões de login*/
+/* Estilo para os botões de autenticação */
+.auth-button {
+  background-color: #007bff; /* Cor de fundo azul */
+  color: #fff; /* Cor do texto branca */
+  border: none; /* Sem borda */
+  padding: 10px 15px; /* Espaçamento interno */
+  cursor: pointer; /* Cursor de mãozinha ao passar o mouse */
+  border-radius: 5px; /* Cantos arredondados */
+  margin: 0 5px; /* Margem entre os botões */
+  font-size: 16px; /* Tamanho da fonte */
+  transition: background-color 0.3s ease; /* Transição suave */
+}
+
+.auth-button:hover {
+  background-color: #0056b3; /* Cor de fundo ao passar o mouse */
+}
+
+.auth-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.button {
+  color: #fff;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+  margin: 0 5px;
+}
+
+/* Botão primário (azul) */
+.button-primary {
+  background-color: #007bff;
+}
+
+.button-primary:hover {
+  background-color: #0056b3;
+}
+
+/* Botão sucesso (verde) */
+.button-success {
+  background-color: #28a745;
+}
+
+.button-success:hover {
+  background-color: #218838;
+}
+
+/* Botão perigo (vermelho) */
+.button-danger {
+  background-color: #dc3545;
+}
+
+.button-danger:hover {
+  background-color: #c82333;
+}
+
+.import-export {
+  text-align: center;
+  margin: 20px 0;
+}
+
 
 /* Estilo para tarefas concluídas no calendário */
 .task-preview.completed {

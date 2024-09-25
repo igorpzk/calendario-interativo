@@ -114,20 +114,26 @@ saveUserData();
 
 // Observar mudanças na autenticação
 firebase.auth().onAuthStateChanged((user) => {
-    if (user) {
-        // Usuário está logado
-        console.log('Usuário logado:', user.email);
-        logoutButton.style.display = 'block';
-        loadUserData();
-    } else {
-        // Usuário não está logado
-        console.log('Usuário não está logado');
-        logoutButton.style.display = 'none';
-        tasks = {};
-        tags = {};
-        renderCalendar(currentMonth, currentYear);
-        updateTags();
-    }
+  if (user) {
+    // Usuário está logado
+    console.log('Usuário logado:', user.email);
+    document.getElementById('logout-button').style.display = 'inline-block';
+    document.querySelectorAll('.login-register-button').forEach(button => {
+      button.style.display = 'none';
+    });
+    loadUserData();
+  } else {
+    // Usuário não está logado
+    console.log('Usuário não está logado');
+    document.getElementById('logout-button').style.display = 'none';
+    document.querySelectorAll('.login-register-button').forEach(button => {
+      button.style.display = 'inline-block';
+    });
+    tasks = {};
+    tags = {};
+    renderCalendar(currentMonth, currentYear);
+    updateTags();
+  }
 });
 
 // Carregar dados do usuário do Firestore
