@@ -259,13 +259,15 @@ header h1 {
 .task-item {
     background-color: #f8f9fa;
     padding: 10px;
-    border-left: 5px solid;
+    border-left: 8px solid;
     margin-bottom: 10px;
     border-radius: 3px;
     position: relative;
 }
 .task-item h4 {
     margin: 0 0 5px 0;
+	margin-left: 20px;
+
 }
 .task-item p {
     margin: 0;
@@ -489,12 +491,13 @@ header h1 {
 .task-item.completed {
     background-color: #d3d3d3;
     color: #666666;
-    border-left: 5px solid;
+    border-left: 8px solid;
     border-left-color: inherit;
 }
 
 .task-item.completed h4 {
     text-decoration: line-through;
+	margin-left: 20px;
 }
 
 .task-item.completed .tag {
@@ -552,4 +555,27 @@ header h1 {
 }
 .edit-task:hover {
     color: #0056b3;
+}
+
+
+/*Edição de Tags*/
+
+/* Estilos para o modal de opções da tag e de edição da tag */
+.modal-content h3 {
+    margin-top: 0;
+}
+
+.modal-content form label {
+    margin-top: 10px;
+}
+
+.modal-content form input {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+}
+
+.modal-content .button {
+    width: auto;
+    margin-top: 15px;
 }

@@ -1,6 +1,7 @@
 // script.js
 
 // Seletores e variáveis globais
+
 const calendarDays = document.getElementById('calendar-days');
 const monthYear = document.getElementById('month-year');
 const prevMonthBtn = document.getElementById('prev-month');
@@ -29,10 +30,13 @@ let currentYear = date.getFullYear();
 
 let tasks = {};
 let tags = {};
+let selectedTagName = null;
 
 let draggedTask = null;
 let draggedTaskDate = null;
 let draggedTaskIndex = null;
+
+
 
 const months = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
                 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
@@ -301,6 +305,7 @@ function createTaskPreview(task, fullDate, index) {
     if (task.completed) {
         taskPreview.classList.add('completed');
         taskPreview.style.borderLeftColor = task.color;
+		taskPreview.style.backgroundColor = 'white';
     }
 
     const taskDesc = task.time ? `${task.time} - ${task.desc}` : task.desc;
@@ -615,13 +620,24 @@ function toggleTaskCompletion(dateStr, taskIndex) {
 function updateTags() {
     tagsContainer.innerHTML = ''; // Limpar as tags existentes
     for (const tagName in tags) {
+        console.log('Criando tag:', tagName); // Verificar o nome da tag
+
         const tagItem = document.createElement('div');
         tagItem.classList.add('tag-item');
         tagItem.textContent = tagName;
         tagItem.style.backgroundColor = tags[tagName];
+
+        // Adicionar evento de clique à tag
+        tagItem.addEventListener('click', function() {
+            console.log('Tag clicada:', tagName); // Verificar o nome da tag quando clicada
+            openTagOptionsModal(tagName);
+        });
+
         tagsContainer.appendChild(tagItem);
     }
 }
+
+
 
 // Função para exibir sugestões de tags
 tagInput.addEventListener('input', function() {
@@ -714,6 +730,127 @@ exportButton.addEventListener('click', function() {
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
 });
+
+//Função para abrir modal de Tags
+
+function openTagOptionsModal(tagName) {
+    
+    // Armazenar o nome da tag selecionada
+    selectedTagName = tagName;
+    document.getElementById('tag-options-modal').style.display = 'block';
+	console.log('Abrindo modal para a tag:', tagName);
+}
+
+
+function closeTagOptionsModal() {
+    document.getElementById('tag-options-modal').style.display = 'none';
+    //selectedTagName = null;
+}
+
+// Botão para editar a tag
+document.getElementById('edit-tag-button').addEventListener('click', () => {
+    closeTagOptionsModal();
+    openEditTagModal(selectedTagName);
+});
+
+// Botão para excluir a tag
+document.getElementById('delete-tag-button').addEventListener('click', () => {
+    closeTagOptionsModal();
+    deleteTag(selectedTagName);
+});
+
+// Editar as Tags
+function openEditTagModal(tagName) {
+    // Preencher os campos com os valores atuais
+    document.getElementById('edit-tag-name').value = tagName;
+    document.getElementById('edit-tag-color').value = tags[tagName];
+
+    document.getElementById('edit-tag-modal').style.display = 'block';
+}
+
+function closeEditTagModal() {
+    document.getElementById('edit-tag-modal').style.display = 'none';
+}
+
+// Event listener para o formulário de edição da tag
+document.getElementById('edit-tag-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const oldTagName = selectedTagName;
+    const newTagName = document.getElementById('edit-tag-name').value.trim();
+    const newTagColor = document.getElementById('edit-tag-color').value;
+
+    // Verificar se o nome da tag foi alterado e não está vazio
+    if (newTagName === '') {
+        alert('O nome da tag não pode estar vazio.');
+        return;
+    }
+
+    // Atualizar o objeto tags
+    delete tags[oldTagName];
+    tags[newTagName] = newTagColor;
+
+    // Atualizar as tarefas que utilizam essa tag
+    for (const date in tasks) {
+        tasks[date].forEach(task => {
+            if (task.tag === oldTagName) {
+                task.tag = newTagName;
+                task.color = newTagColor;
+            }
+        });
+    }
+
+    saveUserData(); // Salvar os dados atualizados no Firestore
+    updateTags(); // Atualizar a exibição das tags
+    renderCalendar(currentMonth, currentYear); // Atualizar o calendário
+
+    closeEditTagModal();
+    selectedTagName = null;
+});
+
+
+//Função para deletar tags
+function deleteTag(tagName) {
+    // Confirmar a exclusão
+    const confirmDelete = confirm(`Tem certeza de que deseja excluir a tag "${tagName}"? Essa ação não pode ser desfeita.`);
+    if (!confirmDelete) {
+        return;
+    }
+
+    // Remover a tag do objeto tags
+    delete tags[tagName];
+
+    // Remover a tag das tarefas que a utilizam
+    for (const date in tasks) {
+        tasks[date].forEach(task => {
+            if (task.tag === tagName) {
+                task.tag = ''; // Remover a tag da tarefa
+                task.color = ''; // Remover a cor associada
+            }
+        });
+    }
+
+    saveUserData(); // Salvar os dados atualizados no Firestore
+    updateTags(); // Atualizar a exibição das tags
+    renderCalendar(currentMonth, currentYear); // Atualizar o calendário
+
+    alert(`A tag "${tagName}" foi excluída com sucesso.`);
+    selectedTagName = null;
+}
+
+// Fechar o modal de opções da tag ao clicar fora
+window.addEventListener('click', function(event) {
+    const tagOptionsModal = document.getElementById('tag-options-modal');
+    if (event.target == tagOptionsModal) {
+        closeTagOptionsModal();
+    }
+
+    const editTagModal = document.getElementById('edit-tag-modal');
+    if (event.target == editTagModal) {
+        closeEditTagModal();
+    }
+});
+
 
 // Inicialização
 renderCalendar(currentMonth, currentYear);

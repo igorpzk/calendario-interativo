@@ -102,6 +102,34 @@
       </form>
     </div>
   </div>
+  
+  <!-- Modal de Opções da Tag -->
+<div id="tag-options-modal" class="modal">
+  <div class="modal-content">
+    <span class="close-btn" onclick="closeTagOptionsModal()">&times;</span>
+    <h3>Opções da Tag</h3>
+    <button id="edit-tag-button" class="button button-primary">Editar Tag</button>
+    <button id="delete-tag-button" class="button button-danger">Excluir Tag</button>
+  </div>
+</div>
+
+<!-- Modal de Edição da Tag -->
+<div id="edit-tag-modal" class="modal">
+  <div class="modal-content">
+    <span class="close-btn" onclick="closeEditTagModal()">&times;</span>
+    <h3>Editar Tag</h3>
+    <form id="edit-tag-form">
+      <label for="edit-tag-name">Nome da Tag:</label>
+      <input type="text" id="edit-tag-name" required>
+      
+      <label for="edit-tag-color">Cor da Tag:</label>
+      <input type="color" id="edit-tag-color" required>
+      
+      <button type="submit" class="button button-primary">Salvar Alterações</button>
+    </form>
+  </div>
+</div>
+
 
 
 <!-- Scripts do Firebase -->
