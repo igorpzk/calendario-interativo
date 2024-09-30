@@ -56,7 +56,6 @@ header h1 {
 
 /* Botões dentro dos modais */
 .modal-content button {
-  width: 100%;
   margin-top: 10px;
 }
 
@@ -272,6 +271,21 @@ header h1 {
     margin: 0;
     font-size: 14px;
 }
+
+/* Estilos para os botões dentro das tarefas */
+.task-item button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  font-size: 16px;
+}
+
+.task-item button:hover {
+  color: #007bff;
+}
+
+
 .tag {
     display: inline-block;
     padding: 2px 8px;
@@ -406,6 +420,14 @@ header h1 {
   align-items: center;
   justify-content: center;
   margin-top: 10px;
+}
+
+.auth-buttons .button {
+  margin: 0 5px;
+}
+
+.auth-buttons .button[style*="display: none"] {
+  display: none !important;
 }
 
 .button {

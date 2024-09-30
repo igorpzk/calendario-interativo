@@ -512,13 +512,18 @@ function showTasks(dateStr) {
                 taskItem.classList.add('completed');
             }
 
-            // Checkbox para marcar tarefa como concluída
-            const completeCheckbox = document.createElement('input');
-            completeCheckbox.type = 'checkbox';
-            completeCheckbox.classList.add('complete-task-checkbox');
-            completeCheckbox.checked = task.completed;
-            completeCheckbox.addEventListener('change', () => toggleTaskCompletion(dateStr, index));
-            taskItem.appendChild(completeCheckbox);
+            
+           // Checkbox para marcar tarefa como concluída
+			const completeCheckbox = document.createElement('input');
+			completeCheckbox.type = 'checkbox';
+			completeCheckbox.classList.add('complete-task-checkbox');
+			completeCheckbox.checked = task.completed;
+			completeCheckbox.addEventListener('change', (event) => {
+			event.stopPropagation(); // Impede a propagação do clique
+			toggleTaskCompletion(dateStr, index);
+			});
+			taskItem.appendChild(completeCheckbox);
+	
 
             const taskTitle = document.createElement('h4');
             const taskDesc = task.time ? `${task.time} - ${task.desc}` : task.desc;
@@ -532,18 +537,24 @@ function showTasks(dateStr) {
             taskItem.appendChild(taskTag);
 
             // Botão de editar tarefa
-            const editBtn = document.createElement('button');
-            editBtn.classList.add('edit-task');
-            editBtn.innerHTML = '&#9998;'; // Ícone de lápis para edição
-            editBtn.addEventListener('click', () => editTask(dateStr, index));
-            taskItem.appendChild(editBtn);
+			const editBtn = document.createElement('button');
+			editBtn.classList.add('edit-task');
+			editBtn.innerHTML = '&#9998;'; // Ícone de lápis para edição
+			editBtn.addEventListener('click', (event) => {
+			event.stopPropagation(); // Impede a propagação do clique
+			editTask(dateStr, index);
+			});
+			taskItem.appendChild(editBtn);
 
             // Botão de excluir tarefa
-            const deleteBtn = document.createElement('button');
-            deleteBtn.classList.add('delete-task');
-            deleteBtn.innerHTML = '&times;';
-            deleteBtn.addEventListener('click', () => deleteTask(dateStr, index));
-            taskItem.appendChild(deleteBtn);
+			const deleteBtn = document.createElement('button');
+			deleteBtn.classList.add('delete-task');
+			deleteBtn.innerHTML = '&times;';
+			deleteBtn.addEventListener('click', (event) => {
+			event.stopPropagation(); // Impede a propagação do clique
+			deleteTask(dateStr, index);
+			});
+			taskItem.appendChild(deleteBtn);
 
             taskList.appendChild(taskItem);
         });
