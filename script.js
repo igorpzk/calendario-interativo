@@ -36,6 +36,8 @@ let draggedTask = null;
 let draggedTaskDate = null;
 let draggedTaskIndex = null;
 
+let notes = {};
+let editingNoteId = null;
 
 
 const months = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
@@ -137,6 +139,7 @@ firebase.auth().onAuthStateChanged((user) => {
     tags = {};
     renderCalendar(currentMonth, currentYear);
     updateTags();
+	renderNotes();
   }
 });
 
@@ -153,14 +156,18 @@ function loadUserData() {
           const data = doc.data();
           tasks = data.tasks || {};
           tags = data.tags || {};
+          notes = data.notes || {};
           renderCalendar(currentMonth, currentYear);
           updateTags();
+          renderNotes(); // Renderizar as notas
         } else {
           // Documento não existe, iniciar com dados vazios
           tasks = {};
           tags = {};
+          notes = {};
           renderCalendar(currentMonth, currentYear);
           updateTags();
+          renderNotes();
         }
       })
       .catch((error) => {
@@ -169,24 +176,28 @@ function loadUserData() {
   }
 }
 
+
 // Salvar dados do usuário no Firestore
 function saveUserData() {
-    const user = firebase.auth().currentUser;
-    if (user) {
-        const db = firebase.firestore();
-        const userDocRef = db.collection('users').doc(user.uid);
+  const user = firebase.auth().currentUser;
+  if (user) {
+    const db = firebase.firestore();
+    const userDocRef = db.collection('users').doc(user.uid);
 
-        userDocRef.set({ tasks: tasks, tags: tags })
-            .then(() => {
-                console.log('Dados salvos com sucesso!');
-            })
-            .catch((error) => {
-                console.log('Erro ao salvar dados:', error);
-            });
-    } else {
-        console.log('Usuário não está autenticado.');
-    }
+    userDocRef.set({
+      tasks: tasks,
+      tags: tags,
+      notes: notes
+    })
+    .then(() => {
+      console.log('Dados salvos com sucesso!');
+    })
+    .catch((error) => {
+      console.error('Erro ao salvar dados:', error);
+    });
+  }
 }
+
 
 // Função para renderizar o calendário
 function renderCalendar(month, year) {
@@ -227,6 +238,15 @@ function renderCalendar(month, year) {
 
         // Verificar e adicionar tarefas se houver
         if (tasks[fullDate]) {
+            // Ordenar as tarefas por horário
+            tasks[fullDate].sort((a, b) => {
+                if (!a.time) return 1;
+                if (!b.time) return -1;
+                if (a.time < b.time) return -1;
+                if (a.time > b.time) return 1;
+                return 0;
+            });
+
             tasks[fullDate].forEach((task, index) => {
                 const taskPreview = createTaskPreview(task, fullDate, index);
                 dayDiv.appendChild(taskPreview);
@@ -259,6 +279,15 @@ function renderCalendar(month, year) {
 
         // Exibir tarefas como texto
         if (tasks[fullDate]) {
+            // Ordenar as tarefas por horário
+            tasks[fullDate].sort((a, b) => {
+                if (!a.time) return 1;
+                if (!b.time) return -1;
+                if (a.time < b.time) return -1;
+                if (a.time > b.time) return 1;
+                return 0;
+            });
+
             tasks[fullDate].forEach((task, index) => {
                 const taskPreview = createTaskPreview(task, fullDate, index);
                 dayDiv.appendChild(taskPreview);
@@ -283,6 +312,15 @@ function renderCalendar(month, year) {
 
         // Verificar e adicionar tarefas se houver
         if (tasks[fullDate]) {
+            // Ordenar as tarefas por horário
+            tasks[fullDate].sort((a, b) => {
+                if (!a.time) return 1;
+                if (!b.time) return -1;
+                if (a.time < b.time) return -1;
+                if (a.time > b.time) return 1;
+                return 0;
+            });
+
             tasks[fullDate].forEach((task, index) => {
                 const taskPreview = createTaskPreview(task, fullDate, index);
                 dayDiv.appendChild(taskPreview);
@@ -850,6 +888,137 @@ window.addEventListener('click', function(event) {
         closeEditTagModal();
     }
 });
+
+
+// Abrir e fechar o modal de Bulletin Board
+function openAddNoteModal() {
+  editingNoteId = null; // Não estamos editando nenhuma nota existente
+  document.getElementById('note-modal-title').textContent = 'Adicionar Nota';
+  document.getElementById('note-form').reset(); // Limpar o formulário
+  document.getElementById('note-color').value = '#ffff88'; // Cor padrão
+  document.getElementById('note-modal').style.display = 'block';
+}
+
+function closeNoteModal() {
+  document.getElementById('note-modal').style.display = 'none';
+}
+
+// Função pra salvar a nota
+
+document.getElementById('note-form').addEventListener('submit', (e) => {
+  e.preventDefault();
+
+  const title = document.getElementById('note-title').value.trim();
+  const date = document.getElementById('note-date').value;
+  const text = document.getElementById('note-text').value.trim();
+  const color = document.getElementById('note-color').value;
+
+  if (!title || !date || !text) {
+    alert('Por favor, preencha todos os campos.');
+    return;
+  }
+
+  if (editingNoteId) {
+    // Editando uma nota existente
+    notes[editingNoteId] = { title, date, text, color };
+  } else {
+    // Criando uma nova nota
+    const noteId = generateUniqueId();
+    notes[noteId] = { title, date, text, color };
+  }
+
+  saveUserData(); // Salvar no Firebase
+  renderNotes(); // Atualizar a exibição das notas
+  closeNoteModal();
+});
+
+
+//Função para renderizar as notas
+
+function renderNotes() {
+  const notesContainer = document.getElementById('notes-container');
+  notesContainer.innerHTML = ''; // Limpar notas existentes
+
+  for (const noteId in notes) {
+    const note = notes[noteId];
+
+    const noteDiv = document.createElement('div');
+    noteDiv.classList.add('note');
+    noteDiv.style.backgroundColor = note.color;
+
+    const noteActions = document.createElement('div');
+    noteActions.classList.add('note-actions');
+
+    // Botão de editar
+    const editBtn = document.createElement('button');
+    editBtn.innerHTML = '&#9998;'; // Ícone de lápis
+    editBtn.addEventListener('click', () => {
+      openEditNoteModal(noteId);
+    });
+
+    // Botão de excluir
+    const deleteBtn = document.createElement('button');
+    deleteBtn.innerHTML = '&times;';
+    deleteBtn.addEventListener('click', () => {
+      deleteNote(noteId);
+    });
+
+    noteActions.appendChild(editBtn);
+    noteActions.appendChild(deleteBtn);
+
+    const noteTitle = document.createElement('h4');
+    noteTitle.textContent = note.title;
+
+    const noteDate = document.createElement('div');
+    noteDate.classList.add('note-date');
+    noteDate.textContent = formatDate(note.date);
+
+    const noteText = document.createElement('div');
+    noteText.classList.add('note-text');
+    noteText.textContent = note.text;
+
+    noteDiv.appendChild(noteActions);
+    noteDiv.appendChild(noteTitle);
+    noteDiv.appendChild(noteDate);
+    noteDiv.appendChild(noteText);
+
+    notesContainer.appendChild(noteDiv);
+  }
+}
+
+// auxiliares
+
+function openEditNoteModal(noteId) {
+  editingNoteId = noteId;
+  const note = notes[noteId];
+
+  document.getElementById('note-modal-title').textContent = 'Editar Nota';
+  document.getElementById('note-title').value = note.title;
+  document.getElementById('note-date').value = note.date;
+  document.getElementById('note-text').value = note.text;
+  document.getElementById('note-color').value = note.color;
+
+  document.getElementById('note-modal').style.display = 'block';
+}
+
+function deleteNote(noteId) {
+  const confirmDelete = confirm('Tem certeza de que deseja excluir esta nota?');
+  if (confirmDelete) {
+    delete notes[noteId];
+    saveUserData();
+    renderNotes();
+  }
+}
+
+function generateUniqueId() {
+  return '_' + Math.random().toString(36).substr(2, 9);
+}
+
+function formatDate(dateStr) {
+  const options = { year: 'numeric', month: 'long', day: 'numeric' };
+  const dateObj = new Date(dateStr);
+  return dateObj.toLocaleDateString('pt-BR', options);
+}
 
 
 // Inicialização

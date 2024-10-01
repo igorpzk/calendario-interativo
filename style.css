@@ -173,6 +173,11 @@ header h1 {
     background-color: #d0d0d0;
 }
 
+.calendar-days div.other-month .task-preview.completed:hover {
+    background-color: #d0d0d0;
+	color: #666666;
+}
+
 .day-number {
     font-weight: bold;
     margin-bottom: 5px;
@@ -487,6 +492,16 @@ header h1 {
     padding-left: 5px;
 }
 
+.task-preview.completed:hover {
+    background-color: #c9c1c9; /* Cor de fundo cinza claro */
+    color: #666666; /* Texto cinza escuro */
+    text-decoration: line-through; /* Texto riscado */
+    position: relative;
+    border-left: 5px solid;
+    border-left-color: inherit;
+    padding-left: 5px;
+}
+
 /* Estilo para tarefas concluídas no modal */
 .task-item.completed {
     background-color: #d3d3d3;
@@ -578,4 +593,164 @@ header h1 {
 .modal-content .button {
     width: auto;
     margin-top: 15px;
+}
+
+/* Estilo para o mural */
+#bulletin-board {
+  margin: 20px;
+}
+
+#bulletin-board h2 {
+  text-align: center;
+}
+
+#bulletin-board .button {
+  display: block;
+  margin: 10px auto;
+}
+
+/* Container das notas */
+#notes-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+}
+
+/* Estilo para as notas */
+.note {
+  width: 200px;
+  min-height: 200px;
+  background-color: #ffff88;
+  padding: 10px;
+  border-radius: 5px;
+  position: relative;
+  word-wrap: break-word;
+}
+
+.note h4 {
+  margin-top: 0;
+}
+
+.note .note-date {
+  font-size: 12px;
+  color: #555;
+}
+
+.note .note-text {
+  margin: 10px 0;
+  max-height: 100px;
+}
+
+.note .note-actions {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+}
+
+.note .note-actions button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.note .note-actions button:hover {
+  color: #007bff;
+}
+
+/* Estilo para o mural */
+#bulletin-board {
+  margin: 20px;
+}
+
+#bulletin-board h2 {
+  text-align: center;
+}
+
+#bulletin-board .button {
+  display: block;
+  margin: 10px auto;
+}
+
+/* Container das notas */
+#notes-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+}
+
+/* Estilo para as notas */
+.note {
+  width: 200px;
+  min-height: 200px;
+  background-color: #ffff88;
+  padding: 10px;
+  border-radius: 5px;
+  position: relative;
+  word-wrap: break-word;
+}
+
+.note h4 {
+  margin-top: 0;
+}
+
+.note .note-date {
+  font-size: 12px;
+  color: #555;
+}
+
+.note .note-text {
+  margin: 10px 0;
+  max-height: 100 px;
+  overflow: auto;
+}
+
+.note .note-actions {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+}
+
+.note .note-actions button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.note .note-actions button:hover {
+  color: #007bff;
+}
+
+
+/* Blocão das notas*/
+/* Estilo para o container principal do calendário */
+#calendar-container {
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* Estilo para o container principal do mural de notas */
+#bulletin-board-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 20px auto; /* Margem para separar dos outros elementos */
+  padding: 15px;
+  background-color: #f9f9f9; /* Cor de fundo da caixa */
+  border: 1px solid #ddd; /* Borda da caixa */
+  border-radius: 5px; /* Cantos arredondados */
+}
+
+/* Estilo para o título dentro do container */
+#bulletin-board h2 {
+  text-align: center;
+  margin-top: 0;
+}
+
+/* Estilo para o botão dentro do mural */
+#bulletin-board .button {
+  display: block;
+  margin: 10px auto;
 }

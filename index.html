@@ -8,13 +8,10 @@
 <body>
 
   <header>
-   <div class="auth-buttons">
-    <button class="button button-primary login-register-button" onclick="openRegisterModal()">Registrar-se</button>
-    <button class="button button-primary login-register-button" onclick="openLoginModal()">Login</button>
-    <button id="logout-button" class="button button-danger" onclick="logoutUser()" style="display: none;">Logout</button>
-  </div>
+   
   </header>
-
+<!-- Container principal do calendário -->
+<div id="calendar-container">
 <div class="calendar">
     <div class="calendar-header">
         <button id="prev-month">&#10094;</button>
@@ -34,18 +31,28 @@
         <div class="calendar-days" id="calendar-days"></div>
     </div>
 </div>
-<!--
-<!-- Botão de Importar Tarefas -->
+
+
+<!-- Botão de Importar e Exportar Tarefas -->
 <div class="import-export">
   <input type="file" id="import-file" style="display: none;">
   <button class="button button-success" onclick="document.getElementById('import-file').click();">Importar Tarefas</button>
   <button id="export-button" class="button button-success">Exportar Tarefas</button>
 </div>
 
+<!-- Botão de login e credenciais -->
+<div class="auth-buttons">
+    <button class="button button-primary login-register-button" onclick="openRegisterModal()">Registrar-se</button>
+    <button class="button button-primary login-register-button" onclick="openLoginModal()">Login</button>
+    <button id="logout-button" class="button button-danger" onclick="logoutUser()" style="display: none;">Logout</button>
+  </div>
+
 <!-- Lista de Tags -->
 <div class="tag-list" id="tag-list">
     <h3>Tags Utilizadas</h3>
     <div id="tags-container"></div>
+</div>
+
 </div>
 
 <!-- Modal para Adicionar Tarefa -->
@@ -130,7 +137,38 @@
   </div>
 </div>
 
+<!-- Container principal do mural de notas -->
+<div id="bulletin-board-container">
+<!-- Seção do Mural de Notas -->
+<div id="bulletin-board">
+  <h2>Mural de Notas</h2>
+  <button class="button button-primary" onclick="openAddNoteModal()">Adicionar Nota</button>
+  <div id="notes-container"></div>
+</div>
 
+<!-- Modal para Adicionar/Editar Nota -->
+<div id="note-modal" class="modal">
+  <div class="modal-content">
+    <span class="close-btn" onclick="closeNoteModal()">&times;</span>
+    <h3 id="note-modal-title">Adicionar Nota</h3>
+    <form id="note-form">
+      <label for="note-title">Título:</label>
+      <input type="text" id="note-title" required>
+
+      <label for="note-date">Data:</label>
+      <input type="date" id="note-date" required>
+
+      <label for="note-text">Texto:</label>
+      <textarea id="note-text" rows="4" required></textarea>
+
+      <label for="note-color">Cor:</label>
+      <input type="color" id="note-color" value="#ffff88" required>
+
+      <button type="submit" class="button button-primary">Salvar Nota</button>
+    </form>
+  </div>
+</div>
+</div>
 
 <!-- Scripts do Firebase -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
