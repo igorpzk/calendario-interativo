@@ -2,8 +2,10 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Calendário Interativo - PZK</title>
+    <title>Calendário Prático - beta v1.0.6</title>
     <link rel="stylesheet" href="style.css">
+	<link rel="icon" href="favicon.ico" type="image/x-icon">
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
 
@@ -169,6 +171,49 @@
   </div>
 </div>
 </div>
+
+<!-- Botão Flutuante de Suporte -->
+<button id="support-button" onclick="openSupportModal()">
+  <span class="material-icons">support_agent</span>
+</button>
+
+<!-- Modal de Suporte -->
+<div id="support-modal" class="modal">
+  <div class="modal-content">
+    <span class="close-btn" onclick="closeSupportModal()">&times;</span>
+    <h3>Envie uma Mensagem de Suporte</h3>
+    <form id="support-form">
+      <label for="support-email">Seu Email:</label>
+      <input type="email" id="support-email" required>
+
+      <label for="support-message">Mensagem:</label>
+      <textarea id="support-message" rows="5" required></textarea>
+
+      <button type="submit" class="button button-primary">Enviar Mensagem</button>
+    </form>
+  </div>
+</div>
+
+<!-- Ícone Flutuante de Configurações -->
+<button id="settings-button" onclick="openSettingsModal()" aria-label="Configurações">
+  <span class="material-icons">settings</span>
+</button>
+
+<!-- Modal de Configurações -->
+<div id="settings-modal" class="modal">
+  <div class="modal-content">
+    <span class="close-btn" onclick="closeSettingsModal()">&times;</span>
+    <h3>Configurações do Tema</h3>
+    <form id="theme-form">
+      <label for="theme-color">Selecione a Cor do Tema:</label>
+      <input type="color" id="theme-color" value="#007bff" required>
+
+      <button type="submit" class="button button-primary">Salvar Preferências</button>
+    </form>
+  </div>
+</div>
+
+
 
 <!-- Scripts do Firebase -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>

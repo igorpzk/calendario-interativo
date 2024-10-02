@@ -1,3 +1,10 @@
+/* Definição pelo usuário */
+:root {
+  --theme-color: #007bff; /* Cor padrão */
+  --theme-color-hover: #0056b3; /* Cor de hover padrão */
+}
+
+
 /* Estilos Gerais */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -73,6 +80,19 @@ header h1 {
   cursor: pointer;
 }
 
+/* Input color dentro do modal */
+
+.modal-content input[type="color"] {
+  display: block;
+  margin-top: 5px;
+  width: 100%;
+  height: 50px;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+
 
 /* Calendário */
 .calendar {
@@ -89,7 +109,7 @@ header h1 {
     justify-content: space-between;
     align-items: center;
     padding: 20px;
-    background-color: #007bff;
+    background-color: var(--theme-color);
     color: #ffffff;
 }
 .calendar-header h2 {
@@ -136,18 +156,18 @@ header h1 {
 }
 
 .calendar-days div.today {
-    background-color: #007bff;
+    background-color: var(--theme-color);
     color: #ffffff;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
 }
 
 .calendar-days div.today .day-number {
     color: inherit;
-    background-color: #007bff
+    background-color: var(--theme-color)
 }
 
 .calendar-days div:hover {
-    background-color: #007bff;
+    background-color: var(--theme-color);
     color: #ffffff;
 }
 
@@ -247,7 +267,7 @@ header h1 {
 .modal form button {
     margin-top: 20px;
     padding: 10px;
-    background-color: #007bff;
+    background-color: var(--theme-color);
     color: #ffffff;
     border: none;
     border-radius: 5px;
@@ -256,7 +276,7 @@ header h1 {
 .modal form button:hover {
     background-color: #0056b3;
 }
-/* Lista de Tarefas */
+/* Lista de Tarefas no calendário */
 .task-list {
     margin-top: 10px;
     text-align: left;
@@ -317,7 +337,7 @@ header h1 {
 }
 /* Lista de Tags */
 .tag-list {
-    max-width: 800px;
+    max-width: 400px;
     margin: 20px auto;
     padding: 10px;
     background-color: #ffffff;
@@ -407,7 +427,7 @@ header h1 {
 /* Botões de login*/
 /* Estilo para os botões de autenticação */
 .auth-button {
-  background-color: #007bff; /* Cor de fundo azul */
+  background-color: var(--theme-color); /* Cor de fundo azul */
   color: #fff; /* Cor do texto branca */
   border: none; /* Sem borda */
   padding: 10px 15px; /* Espaçamento interno */
@@ -450,11 +470,11 @@ header h1 {
 
 /* Botão primário (azul) */
 .button-primary {
-  background-color: #007bff;
+  background-color: var(--theme-color);
 }
 
 .button-primary:hover {
-  background-color: #0056b3;
+  background-color: var(--theme-color-hover);
 }
 
 /* Botão sucesso (verde) */
@@ -533,13 +553,13 @@ header h1 {
     right: 40px;
     background: none;
     border: none;
-    color: #007bff;
+    color: var(--theme-color);
     font-size: 16px;
     cursor: pointer;
 }
 
 .edit-task:hover {
-    color: #0056b3;
+    color: var(--theme-color-hover);
 }
 
 .delete-task {
@@ -564,12 +584,12 @@ header h1 {
     right: 40px; /* Ajuste conforme necessário */
     background: none;
     border: none;
-    color: #007bff;
+    color: var(--theme-color);
     font-size: 16px;
     cursor: pointer;
 }
 .edit-task:hover {
-    color: #0056b3;
+    color: var(--theme-color-hover);
 }
 
 
@@ -593,6 +613,12 @@ header h1 {
 .modal-content .button {
     width: auto;
     margin-top: 15px;
+}
+
+.modal-content .button:hover {
+    width: auto;
+    margin-top: 15px;
+	background-color: var(--theme-color-hover);
 }
 
 /* Estilo para o mural */
@@ -735,12 +761,14 @@ header h1 {
 /* Estilo para o container principal do mural de notas */
 #bulletin-board-container {
   width: 100%;
-  max-width: 1200px;
+  max-width: 1000px;
   margin: 20px auto; /* Margem para separar dos outros elementos */
   padding: 15px;
-  background-color: #f9f9f9; /* Cor de fundo da caixa */
+  background-color: #fff; /* Cor de fundo da caixa */
   border: 1px solid #ddd; /* Borda da caixa */
   border-radius: 5px; /* Cantos arredondados */
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  overflow: hidden;  
 }
 
 /* Estilo para o título dentro do container */
@@ -753,4 +781,62 @@ header h1 {
 #bulletin-board .button {
   display: block;
   margin: 10px auto;
+}
+
+
+/* Botão de suporte */
+/* Estilo para o botão flutuante de suporte */
+#support-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: var(--theme-color);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  cursor: pointer;
+  z-index: 1000;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex; /* Adiciona flexbox */
+  align-items: center; /* Centraliza verticalmente */
+  justify-content: center; /* Centraliza horizontalmente */
+}
+
+#support-button:hover {
+  background-color: var(--theme-color-hover);
+}
+
+/* Ajustar o tamanho do ícone */
+#support-button i {
+  font-size: 28px; /* Ajuste conforme necessário */
+}
+
+/* Estilo para o botão flutuante de configurações */
+#settings-button {
+  position: fixed;
+  bottom: 100px; /* Ajuste conforme necessário */
+  right: 20px;
+  background-color: var(--theme-color, #007bff);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  cursor: pointer;
+  z-index: 1000;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#settings-button:hover {
+  background-color: var(--theme-color-hover, #0056b3);
+}
+
+/* Ajustar o tamanho do ícone */
+#settings-button .material-icons {
+  font-size: 32px;
 }

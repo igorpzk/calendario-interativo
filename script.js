@@ -157,14 +157,19 @@ function loadUserData() {
           tasks = data.tasks || {};
           tags = data.tags || {};
           notes = data.notes || {};
+          const themeColor = data.themeColor || '#007bff';
+
+          applyThemeColor(themeColor);
+
           renderCalendar(currentMonth, currentYear);
           updateTags();
-          renderNotes(); // Renderizar as notas
+          renderNotes();
         } else {
-          // Documento não existe, iniciar com dados vazios
+          // Documento não existe, iniciar com dados padrão
           tasks = {};
           tags = {};
           notes = {};
+          applyThemeColor('#007bff');
           renderCalendar(currentMonth, currentYear);
           updateTags();
           renderNotes();
@@ -173,6 +178,10 @@ function loadUserData() {
       .catch((error) => {
         console.log('Erro ao carregar dados:', error);
       });
+  } else {
+    // Usuário não autenticado
+    const themeColor = localStorage.getItem('themeColor') || '#007bff';
+    applyThemeColor(themeColor);
   }
 }
 
@@ -1019,6 +1028,136 @@ function formatDate(dateStr) {
   const dateObj = new Date(dateStr);
   return dateObj.toLocaleDateString('pt-BR', options);
 }
+
+// Modal de suporte
+
+function openSupportModal() {
+  document.getElementById('support-modal').style.display = 'block';
+}
+
+function closeSupportModal() {
+  document.getElementById('support-modal').style.display = 'none';
+}
+
+// Fechar o modal ao clicar fora dele
+window.addEventListener('click', function(event) {
+  const supportModal = document.getElementById('support-modal');
+  if (event.target == supportModal) {
+    closeSupportModal();
+  }
+});
+
+// Enviar suporte ao FB
+
+document.getElementById('support-form').addEventListener('submit', (e) => {
+  e.preventDefault();
+
+  const email = document.getElementById('support-email').value.trim();
+  const message = document.getElementById('support-message').value.trim();
+
+  if (!email || !message) {
+    alert('Por favor, preencha todos os campos.');
+    return;
+  }
+
+  // Obter a data e hora atuais
+  const timestamp = new Date();
+
+  // Criar o objeto da mensagem
+  const supportMessage = {
+    email: email,
+    message: message,
+    timestamp: firebase.firestore.Timestamp.fromDate(timestamp)
+  };
+
+  // Salvar a mensagem no Firestore
+  const db = firebase.firestore();
+  db.collection('supportMessages').add(supportMessage)
+    .then(() => {
+      alert('Sua mensagem foi enviada com sucesso! Entraremos em contato em breve.');
+      closeSupportModal();
+      document.getElementById('support-form').reset();
+    })
+    .catch((error) => {
+      console.error('Erro ao enviar a mensagem de suporte:', error);
+      alert('Ocorreu um erro ao enviar sua mensagem. Por favor, tente novamente.');
+    });
+});
+
+// Modal de configurações
+
+function openSettingsModal() {
+  document.getElementById('settings-modal').style.display = 'block';
+}
+
+function closeSettingsModal() {
+  document.getElementById('settings-modal').style.display = 'none';
+}
+
+// Fechar o modal ao clicar fora dele
+window.addEventListener('click', function(event) {
+  const settingsModal = document.getElementById('settings-modal');
+  if (event.target == settingsModal) {
+    closeSettingsModal();
+  }
+});
+
+document.getElementById('theme-form').addEventListener('submit', (e) => {
+  e.preventDefault();
+
+  const themeColor = document.getElementById('theme-color').value;
+
+  // Salvar a preferência de cor do usuário
+  const user = firebase.auth().currentUser;
+  if (user) {
+    const db = firebase.firestore();
+    const userDocRef = db.collection('users').doc(user.uid);
+
+    userDocRef.update({
+      themeColor: themeColor
+    })
+    .then(() => {
+      console.log('Cor do tema atualizada com sucesso!');
+      applyThemeColor(themeColor); // Aplicar a cor imediatamente
+      closeSettingsModal();
+    })
+    .catch((error) => {
+      console.error('Erro ao atualizar a cor do tema:', error);
+    });
+  } else {
+    // Usuário não autenticado, salvar no localStorage
+    localStorage.setItem('themeColor', themeColor);
+    applyThemeColor(themeColor);
+    closeSettingsModal();
+  }
+});
+
+// Aplicar a cor
+function applyThemeColor(color) {
+  // Aplicar a cor do tema aos elementos do site
+  document.documentElement.style.setProperty('--theme-color', color);
+
+  // Ajustar a cor de hover (escurecer um pouco a cor)
+  const hoverColor = shadeColor(color, -20);
+  document.documentElement.style.setProperty('--theme-color-hover', hoverColor);
+}
+
+// Função para escurecer ou clarear uma cor
+function shadeColor(color, percent) {
+  const num = parseInt(color.slice(1),16),
+        amt = Math.round(2.55 * percent),
+        R = (num >> 16) + amt,
+        G = (num >> 8 & 0x00FF) + amt,
+        B = (num & 0x0000FF) + amt;
+  return "#" + (
+    0x1000000 +
+    (R < 255 ? (R < 1 ? 0 : R) : 255)*0x10000 +
+    (G < 255 ? (G < 1 ? 0 : G) : 255)*0x100 +
+    (B < 255 ? (B < 1 ? 0 : B) : 255)
+  ).toString(16).slice(1);
+}
+
+
 
 
 // Inicialização
