@@ -192,6 +192,8 @@ function saveUserData() {
   if (user) {
     const db = firebase.firestore();
     const userDocRef = db.collection('users').doc(user.uid);
+	
+	 const themeColor = getComputedStyle(document.documentElement).getPropertyValue('--theme-color').trim();
 
     userDocRef.set({
       tasks: tasks,
@@ -1159,7 +1161,12 @@ function shadeColor(color, percent) {
 }
 
 
-
+document.addEventListener('click', (event) => {
+  if (!taskTagInput.contains(event.target) && !tagSuggestionsContainer.contains(event.target)) {
+    tagSuggestionsContainer.innerHTML = '';
+    tagSuggestionsContainer.style.display = 'none';
+  }
+});
 
 // Inicialização
 renderCalendar(currentMonth, currentYear);
