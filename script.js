@@ -196,8 +196,9 @@ function saveUserData() {
     userDocRef.set({
       tasks: tasks,
       tags: tags,
-      notes: notes
-    })
+      notes: notes,
+      themeColor: themeColor
+    }, { merge: true })
     .then(() => {
       console.log('Dados salvos com sucesso!');
     })

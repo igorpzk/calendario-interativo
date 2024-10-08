@@ -65,14 +65,21 @@
         <form id="task-form">
             <input type="hidden" id="task-date">
             <label for="task-time">Horário:</label>
+			
             <input type="time" id="task-time">
             <label for="task-desc">Descrição:</label>
             <textarea id="task-desc" rows="3" required></textarea>
-            <label for="task-tag">Tag:</label>
-            <input type="text" id="task-tag" placeholder="Nome da Tag" autocomplete="off" required>
-            <div id="tag-suggestions" class="tag-suggestions"></div>
+			
+            <div class="input-group" style="position: relative;">
+			<label for="task-tag">Tag:</label>
+			<input type="text" id="task-tag" autocomplete="off">
+			<!-- Contêiner para as sugestões de tags -->
+			<div id="tag-suggestions"></div>
+			</div>
+			
             <label for="tag-color">Cor da Tag:</label>
             <input type="color" id="tag-color" value="#6c757d">
+			
             <button type="submit">Salvar Tarefa</button>
         </form>
     </div>
